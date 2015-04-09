@@ -1,0 +1,9 @@
+[linkselect]
+title: Proxy config
+description: Please select proxy configuration
+  from the options below:
+#icon = 
+base: /etc/privoxy
+link: config
+pattern: config.*
+changehook:
