@@ -1,13 +1,16 @@
 LinkSelect
-========
+==========
 
 Selector of multiple targets for symlinks.
 Used for example as a configuration switch.
 
-Development status: **Alpha**
+Development status: **Beta**
 
-**NOTE:** LinkSelect requires Python 3.4 or later.
+Requirements
+------------
 
+- Python 3.4 or later.
+- PyQt4
 
 Locations
 ---------

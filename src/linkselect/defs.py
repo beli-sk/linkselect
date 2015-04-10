@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with LinkSelect.  If not, see <http://www.gnu.org/licenses/>.
 #
-__version__ = '0.0.1.dev1'
+__version__ = '0.0.1-beta1'
 app_name = 'LinkSelect'
 app_description = 'Selector of multiple targets for symlinks.'
 app_name_desc = '{} - {}'.format(app_name, app_description)

@@ -1,5 +1,6 @@
 *.py[co]
 build/
 dist/
+env/
 src/*.egg-info/
 doc/_build/

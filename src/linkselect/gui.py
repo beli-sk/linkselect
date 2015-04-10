@@ -18,7 +18,9 @@
 #
 import sys
 import time
+import shlex
 import argparse
+import subprocess
 import configparser
 
 from PyQt4 import QtGui, QtCore
@@ -29,12 +31,13 @@ from .core import LinkSelect
 
 
 class LinkSelectWidget(QtGui.QMainWindow):
-    def __init__(self, linkselect, app_title, app_description, app_icon=None):
+    def __init__(self, linkselect, app_title, app_description, app_icon=None, changehook=None):
         self.app_title = app_title
         self.app_description = app_description
         self.linkselect = linkselect
         self.app_icon = app_icon
         self.last_status = 0
+        self.changehook = changehook
         super().__init__()
         self.initUI()
 
@@ -104,7 +107,7 @@ class LinkSelectWidget(QtGui.QMainWindow):
     def status(self, msg):
         if self.last_status > int(time.time())-2:
             # there are recent messages
-            message = self.statusBar().currentMessage() + ' || ' + msg
+            message = msg + ' || ' + self.statusBar().currentMessage()
         else:
             message = msg
         self.statusBar().showMessage(message)
@@ -114,21 +117,32 @@ class LinkSelectWidget(QtGui.QMainWindow):
     def reload(self):
         self.linkselect.refresh()
         self.selector.clear()
-        current = self.linkselect.get_current_choice()
+        current_index, current_value = self.linkselect.get_current_choice()
         for i, v in enumerate(self.linkselect.get_choices()):
-            self.selector.addItem(v)
-            if v == current:
+            d, p = v
+            self.selector.addItem(d)
+            if current_index == i:
                 self.selector.setCurrentIndex(i)
         self.status('Reloaded.')
+        if current_index is None:
+            self.status('Current value: {}'.format(current_value))
 
     def apply(self):
+        p = self.linkselect.get_choices()[self.selector.currentIndex()][1]
         try:
-            self.linkselect.set_link(self.selector.currentText())
+            self.linkselect.set_link(p)
         except:
             self._show_error()
         else:
             self.status('Applied configuration.')
-            self.reload()
+            if self.changehook:
+                try:
+                    subprocess.check_call(self.changehook, shell=True)
+                except:
+                    self._show_error()
+                else:
+                    self.status('Change hook success.')
+        self.reload()
 
     def center(self):
         qr = self.frameGeometry()
@@ -150,18 +164,27 @@ def main():
     conf = configparser.ConfigParser(defaults={
         'title': 'Link select',
         'description': '',
+        'icon': None,
+        'desc_from_content': False,
+        'desc_parse_lines': 1,
+        'desc_regexp': None,
+        'changehook': None,
         })
     with open(args.config, 'r') as f:
         conf.read_file(f)
 
     conf = conf['linkselect']
 
-    icon = conf.get('icon', fallback=None)
-
+    unknown.insert(0, sys.argv[0])
     app = QtGui.QApplication(unknown)
     pcw = LinkSelectWidget(
-            LinkSelect(conf['link'], conf['pattern'], conf['base'], refresh=False),
-            conf['title'], conf['description'], icon
+            LinkSelect(conf['link'], conf['pattern'], conf['base'], refresh=False,
+                desc_from_content=conf.getboolean('desc_from_content'),
+                desc_parse_lines=conf.getint('desc_parse_lines'),
+                desc_regexp=conf['desc_regexp'],
+                ),
+            conf['title'], conf['description'], conf['icon'],
+            changehook=conf['changehook'],
             )
     sys.exit(app.exec_())
 

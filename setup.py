@@ -19,7 +19,7 @@ setup(
     version=defs['__version__'],
     description=defs['app_description'],
     long_description=long_description,
-    #url='',
+    url='https://github.com/beli-sk/linkselect',
     author="Michal Belica",
     author_email="devel@beli.sk",
     license="GPL-3",
