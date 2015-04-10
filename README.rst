@@ -9,7 +9,7 @@ Development status: **Beta**
 Requirements
 ------------
 
-- Python 3.4 or later.
+- Python 3.4 or later
 - PyQt4
 
 Locations

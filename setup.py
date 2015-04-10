@@ -24,7 +24,7 @@ setup(
     author_email="devel@beli.sk",
     license="GPL-3",
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: X11 Applications :: Qt',
         'Intended Audience :: System Administrators',
         'Intended Audience :: Developers',
