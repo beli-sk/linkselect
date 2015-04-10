@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Name=Select proxy
+Exec=/usr/bin/kdesudo '/usr/local/bin/linkselect -c /home/user1/.config/linkselect-proxy.conf'
+Terminal=false
+Type=Application
+Icon=/home/user1/.local/share/pixmaps/globe.png
+StartupNotify=false
